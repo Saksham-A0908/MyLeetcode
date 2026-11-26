@@ -1,32 +1,40 @@
-import java.util.*;
-
 class NumberContainers {
 
-    HashMap<Integer, Integer> map = new HashMap<>();
-    HashMap<Integer, TreeSet<Integer>> nums = new HashMap<>();
+    int[] indices = new int[100001];
+    int[] numbers = new int[100001];
+    int size = 0;
 
     public NumberContainers() {
     }
 
     public void change(int index, int number) {
 
-        if (map.containsKey(index)) {
-            int old = map.get(index);
-            nums.get(old).remove(index);
+        for (int i = 0; i < size; i++) {
+            if (indices[i] == index) {
+                numbers[i] = number;
+                return;
+            }
         }
 
-        map.put(index, number);
-
-        nums.putIfAbsent(number, new TreeSet<>());
-        nums.get(number).add(index);
+        indices[size] = index;
+        numbers[size] = number;
+        size++;
     }
 
     public int find(int number) {
 
-        if (!nums.containsKey(number) || nums.get(number).isEmpty()) {
+        int min = Integer.MAX_VALUE;
+
+        for (int i = 0; i < size; i++) {
+            if (numbers[i] == number) {
+                min = Math.min(min, indices[i]);
+            }
+        }
+
+        if (min == Integer.MAX_VALUE) {
             return -1;
         }
 
-        return nums.get(number).first();
+        return min;
     }
 }
